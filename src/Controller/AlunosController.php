@@ -2,48 +2,41 @@
 
 namespace Foco\Controller;
 
-use Illuminate\Pagination\Paginator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Foco\Model\Aluno;
+use Foco\Repository\AlunosRepository;
 
-class AlunosController extends Controller
+class AlunosController extends BaseController
 {
+    protected $alunosRepo;
+
+    public function __construct($container)
+    {
+        parent::__construct($container);
+        $this->alunosRepo = new AlunosRepository;
+    }
+
     public function index(Request $request, Response $response, array $args)
     {
-        $queryParams = $request->getQueryParams();
-        $page = isset($queryParams['page']) ? $queryParams['page'] : 1;
-        $count = isset($queryParams['count']) ? $queryParams['count'] : 10;
-
-        Paginator::currentPageResolver(function () use ($page) {
-            return $page;
-        });
-
-        $data = Aluno::with('endereco')->paginate($count);
-
-        return $response->withJson($data);
+        $params = $request->getQueryParams();
+        $page = isset($params['page']) ? $params['page'] : 1;
+        $count = isset($params['count']) ? $params['count'] : 10;
+        $data = $this->alunosRepo->allPaginated($count, $page);
+        return $this->successResponse($response, $data);
     }
 
     public function view(Request $request, Response $response, array $args)
     {
         $id = $args['id'];
-        $data = Aluno::with('endereco')->find($id);
-
-        return $response->withJson($data);
+        $data = $this->alunosRepo->find($id);
+        return $this->successResponse($response, $data);
     }
 
     public function create(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();
-        $aluno = Aluno::create($body);
-
-        if (isset($body['endereco'])) {
-            $aluno->endereco()->create($body['endereco']);
-        }
-
-        $data = Aluno::with(['endereco'])->find($aluno->id);
-
+        $data = $this->alunosRepo->create($body);
         return $response->withJson($data);
     }
 
@@ -53,30 +46,13 @@ class AlunosController extends Controller
         $body = $request->getParsedBody();
 
         try {
-            
-            $aluno = Aluno::findOrFail($id);
-            $aluno->fill($body);
-            $aluno->save();
-    
-            if (isset($body['endereco'])) {
-                $endereco = $aluno->endereco;
-    
-                if (!is_null($endereco)) {
-                    $endereco->fill($body['endereco']);
-                    $endereco->save();
-                } else {
-                    $aluno->endereco()->create($body['endereco']);
-                }
-            }
-    
-            $data = Aluno::with(['endereco'])->find($id);
+            $data = $this->alunosRepo->update($id, $body);
             return $response->withJson($data);
         } catch (\Exception $e) {
             return $response->withJson([
                 'success' => false,
                 'error' => $e->getMessage(),
             ]);        
-        }
-
+        } 
     }
 }

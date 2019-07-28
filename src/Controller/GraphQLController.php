@@ -16,19 +16,15 @@ use GraphQL\Type\Schema;
 use Foco\GraphQL\Types;
 use Foco\GraphQL\AppContext;
 
-class GraphQLController
+class GraphQLController extends BaseController
 {
-    private $database;
-    private $container;
-
     protected $maxDepth;
     protected $introspection;
     protected $debug;
 
     public function __construct(ContainerInterface $container, int $maxDepth = 15, bool $introspection = true, int $debug = 0)
     {
-        $this->container = $container;
-        $this->database = $container->database;
+        parent::__construct($container);
 
         $this->maxDepth = $maxDepth;
         $this->introspection = $introspection;

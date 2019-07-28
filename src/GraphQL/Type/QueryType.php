@@ -8,11 +8,19 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
 use Foco\GraphQL\Types;
+use Foco\Repository;
 
 class QueryType extends ObjectType
 {
+
+    protected $alunosRepo;
+    protected $enderecosRepo; 
+
     public function __construct()
     {
+        $this->alunosRepo = new Repository\AlunosRepository;
+        $this->enderecosRepo = new Repository\EnderecosRepository;
+
         $config = [
             'name' => 'Query',
             'fields' => [
@@ -68,31 +76,25 @@ class QueryType extends ObjectType
 
     public function aluno($rootValue, $args)
     {
-        return \Foco\Model\Aluno::find($args['id']);
+        return $this->alunosRepo->find($args['id']);
     }
 
     public function alunos($rootValue, $args)
     {
         $count = $args['count'];
         $page = $args['page'];
-        Paginator::currentPageResolver(function () use ($page) {
-            return $page;
-        });
-        return \Foco\Model\Aluno::paginate($count);
+        return $this->alunosRepo->allPaginated($count, $page);
     }
 
     public function endereco($rootValue, $args)
     {
-        return \Foco\Model\Endereco::find($args['id']);
+        return $this->enderecosRepo->find($args['id']);
     }
 
     public function enderecos($rootValue, $args)
     {
         $count = $args['count'];
         $page = $args['page'];
-        Paginator::currentPageResolver(function () use ($page) {
-            return $page;
-        });
-        return \Foco\Model\Endereco::paginate($count);
+        return $this->enderecosRepo->allPaginated($count, $page);
     }
 }
