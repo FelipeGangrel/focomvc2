@@ -19,10 +19,21 @@ class BaseController
 
     public function successResponse(Response $response, $data = null, $message = "Requisição realizada com sucesso")
     {
+        if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            $paginatedData = $data->toArray();
+            $paginator = [
+                'total' => $paginatedData['total'],
+                'pages' => $paginatedData['last_page'],
+            ];
+            $data = $paginatedData['data'];
+        } else {
+            $paginator = null;
+        }
+
         return $response->withJson([
             'success' => true,
-            'data' => isset($data['data']) ? $data['data'] : $data,
-            'paginator' => isset($data['paginator']) ? $data['paginator'] : null,
+            'data' => $data,
+            'paginator' => $paginator,
             'message' => $message,
             'errors' => null
         ]);
