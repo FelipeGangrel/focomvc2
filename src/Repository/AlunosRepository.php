@@ -7,18 +7,19 @@ use Foco\Validator\AlunoValidator;
 
 class AlunosRepository extends BaseRepository
 {
+    protected $validator;
     protected $defaultRelations = ['endereco','endereco.cidade'];
 
-    public function __construct()
+    public function __construct($container)
     {
         $this->model = new Aluno;
+        $this->validator = new AlunoValidator($container);
     }
 
     public function create($data)
     {
         try {
-            $validator = new AlunoValidator;
-            $validator->beforeCreate($data);
+            $this->validator->beforeCreate($data);
 
             $aluno = $this->model->create($data);
             if (isset($data['endereco'])) {
@@ -33,8 +34,7 @@ class AlunosRepository extends BaseRepository
     public function update($id, $data)
     {
         try {
-            $validator = new AlunoValidator;
-            $validator->beforeUpdate($data, $id);
+            $this->validator->beforeUpdate($data, $id);
 
             $aluno = $this->find($id);
             $aluno->fill($data);

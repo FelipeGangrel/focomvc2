@@ -14,7 +14,7 @@ class AlunosController extends BaseController
     public function __construct($container)
     {
         parent::__construct($container);
-        $this->alunosRepo = new AlunosRepository;
+        $this->alunosRepo = new AlunosRepository($container);
     }
 
     public function index(Request $request, Response $response, array $args)

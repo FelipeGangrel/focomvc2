@@ -4,6 +4,7 @@ namespace Foco\Validator;
 
 use Illuminate\Validation;
 use Illuminate\Translation;
+use Illuminate\Validation\DatabasePresenceVerifier;
 use Illuminate\Validation\Factory;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader;
@@ -19,13 +20,17 @@ class ValidatorFactory
     public $basePath;
     public static $translator;
     
-    public function __construct($namespace = 'lang', $lang = 'pt-br', $group = 'validation')
+    public function __construct($db, $namespace = 'lang', $lang = 'pt-br', $group = 'validation')
     {
         $this->lang = $lang;
         $this->group = $group;
         $this->namespace = $namespace;
         $this->basePath = $this->getTranslationsRootPath();
-        $this->factory = new Factory($this->loadTranslator());
+        
+        $databaseManager = $db->getDatabaseManager();
+        $factory = new Factory($this->loadTranslator());
+        $factory->setPresenceVerifier(new DatabasePresenceVerifier($databaseManager));
+        $this->factory = $factory;
     }
     public function translationsRootPath(string $path = '')
     {
