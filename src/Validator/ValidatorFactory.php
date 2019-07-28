@@ -19,19 +19,33 @@ class ValidatorFactory
     // Translations root directory
     public $basePath;
     public static $translator;
-    
-    public function __construct($db, $namespace = 'lang', $lang = 'pt-br', $group = 'validation')
+
+    public function __construct($namespace = 'lang', $lang = 'pt-br', $group = 'validation')
     {
         $this->lang = $lang;
         $this->group = $group;
         $this->namespace = $namespace;
         $this->basePath = $this->getTranslationsRootPath();
-        
-        $databaseManager = $db->getDatabaseManager();
+
         $factory = new Factory($this->loadTranslator());
+        $databaseManager = $this->getDatabaseManager();
         $factory->setPresenceVerifier(new DatabasePresenceVerifier($databaseManager));
         $this->factory = $factory;
     }
+
+    // Pequena gambiarra para pegar o manager do Eloquent
+    private function getDatabaseManager()
+    {
+        $file = require __DIR__ . '/../../src/settings.php';
+        $dbSettings = $file['settings']['db'];
+
+        $capsule = new \Illuminate\Database\Capsule\Manager;
+        $capsule->addConnection($dbSettings);
+        $capsule->setAsGlobal();
+        $capsule->bootEloquent();
+        return $capsule->getDatabaseManager();
+    }
+
     public function translationsRootPath(string $path = '')
     {
         if (!empty($path)) {
@@ -40,15 +54,18 @@ class ValidatorFactory
         }
         return $this;
     }
+
     private function reloadValidatorFactory()
     {
         $this->factory = new Factory($this->loadTranslator());
         return $this;
     }
+
     public function getTranslationsRootPath(): string
     {
         return dirname(__FILE__) . '/../';
     }
+
     public function loadTranslator(): Translator
     {
         $loader = new FileLoader(new Filesystem(), $this->basePath . $this->namespace);
@@ -56,6 +73,7 @@ class ValidatorFactory
         $loader->load($this->lang, $this->group, $this->namespace);
         return static::$translator = new Translator($loader, $this->lang);
     }
+
     public function __call($method, $args)
     {
         return call_user_func_array([$this->factory, $method], $args);

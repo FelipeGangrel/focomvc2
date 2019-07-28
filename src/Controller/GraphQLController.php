@@ -22,6 +22,8 @@ class GraphQLController extends BaseController
     protected $introspection;
     protected $debug;
 
+    protected $appContext;
+
     public function __construct(ContainerInterface $container, int $maxDepth = 15, bool $introspection = true, int $debug = 0)
     {
         parent::__construct($container);
@@ -29,15 +31,15 @@ class GraphQLController extends BaseController
         $this->maxDepth = $maxDepth;
         $this->introspection = $introspection;
         $this->debug = $debug;
+
+        $this->appContext = new AppContext();
     }
 
     public function __invoke(Request $request, Response $response)
     {
-
         try {
 
-            $appContext = new AppContext();
-            $appContext->request = $request;
+            $this->appContext->request = $request;
 
             $input = json_decode($request->getBody(), true);
             $query = isset($input['query']) ? $input['query'] : null;
@@ -53,7 +55,7 @@ class GraphQLController extends BaseController
                 $schema,
                 $query,
                 null,
-                $appContext,
+                $this->appContext,
                 (array) $variableValues
             );
 

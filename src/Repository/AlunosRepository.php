@@ -10,10 +10,10 @@ class AlunosRepository extends BaseRepository
     protected $validator;
     protected $defaultRelations = ['endereco','endereco.cidade'];
 
-    public function __construct($container)
+    public function __construct()
     {
         $this->model = new Aluno;
-        $this->validator = new AlunoValidator($container);
+        $this->validator = new AlunoValidator;
     }
 
     public function create($data)

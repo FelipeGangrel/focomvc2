@@ -9,9 +9,9 @@ class AlunoValidator
 {
     protected $factory;
 
-    public function __construct($container)
+    public function __construct()
     {
-        $this->factory = new ValidatorFactory($container->database);
+        $this->factory = new ValidatorFactory;
     }
 
     public function beforeCreate($data)
