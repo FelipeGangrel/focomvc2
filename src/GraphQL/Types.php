@@ -9,6 +9,7 @@ use GraphQL\Type\Definition\Type;
 use Foco\GraphQL\Type\AlunoType;
 use Foco\GraphQL\Type\QueryType;
 use Foco\GraphQL\Type\NodeType;
+use Foco\GraphQL\Type\EnderecoType;
 
 /**
  * Funcionará como registro e factory para
@@ -21,6 +22,12 @@ class Types
     public static function aluno()
     {
         return self::$aluno ?: (self::$aluno = new AlunoType());
+    }
+
+    private static $endereco;
+    public static function endereco()
+    {
+        return self::$endereco ?: (self::$endereco = new EnderecoType());
     }
 
     private static $query;

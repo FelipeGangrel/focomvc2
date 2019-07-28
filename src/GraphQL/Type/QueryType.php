@@ -36,9 +36,30 @@ class QueryType extends ObjectType
                             'description' => 'Número da página a ser entregue'
                         ]
                     ]
+                ],
+                'endereco' => [
+                    'type' => Types::endereco(),
+                    'description' => 'Retorna um Endereco através de seu id',
+                    'args' => [
+                        'id' => Types::nonNull(Types::id())
+                    ]
+                ],
+                'enderecos' => [
+                    'type' => Types::listOf(Types::endereco()),
+                    'description' => 'Retorna uma coleção de Enderecos',
+                    'args' => [
+                        'count' => [
+                            'type' => Types::int(),
+                            'description' => 'Quantidade de items a serem colocados na coleção',
+                        ],
+                        'page' => [
+                            'type' => Types::id(),
+                            'description' => 'Número da página a ser entregue'
+                        ]
+                    ]
                 ]
             ],
-            'resolveField' => function($rootValue, $args, $context, ResolveInfo $info) {
+            'resolveField' => function ($rootValue, $args, $context, ResolveInfo $info) {
                 return $this->{$info->fieldName}($rootValue, $args, $context, $info);
             }
         ];
@@ -58,5 +79,20 @@ class QueryType extends ObjectType
             return $page;
         });
         return \Foco\Model\Aluno::paginate($count);
+    }
+
+    public function endereco($rootValue, $args)
+    {
+        return \Foco\Model\Endereco::find($args['id']);
+    }
+
+    public function enderecos($rootValue, $args)
+    {
+        $count = $args['count'];
+        $page = $args['page'];
+        Paginator::currentPageResolver(function () use ($page) {
+            return $page;
+        });
+        return \Foco\Model\Endereco::paginate($count);
     }
 }

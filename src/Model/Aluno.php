@@ -11,6 +11,6 @@ class Aluno extends Model
 
     public function endereco()
     {
-        return $this->morphOne('\Models\Endereco', 'enderecoable');
+        return $this->morphOne(Endereco::class, 'enderecoable');
     }
 }

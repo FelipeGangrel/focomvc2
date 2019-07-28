@@ -6,7 +6,7 @@ use Illuminate\Pagination\Paginator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Model\Aluno;
+use Foco\Model\Aluno;
 
 class AlunosController extends Controller
 {
@@ -14,13 +14,13 @@ class AlunosController extends Controller
     {
         $queryParams = $request->getQueryParams();
         $page = isset($queryParams['page']) ? $queryParams['page'] : 1;
-        $limit = isset($queryParams['limit']) ? $queryParams['limit'] : 10;
+        $count = isset($queryParams['count']) ? $queryParams['count'] : 10;
 
         Paginator::currentPageResolver(function () use ($page) {
             return $page;
         });
 
-        $data = Aluno::with('endereco')->paginate($limit);
+        $data = Aluno::with('endereco')->paginate($count);
 
         return $response->withJson($data);
     }

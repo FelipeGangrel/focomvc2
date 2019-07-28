@@ -5,32 +5,31 @@ namespace Foco\GraphQL\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use Foco\Model\Aluno;
+use Foco\Model\Endereco;
 use Foco\GraphQL\Types;
 
-class AlunoType extends ObjectType
+class EnderecoType extends ObjectType
 {
     public function __construct()
     {
         $config = [
-            'name' => 'Aluno',
-            'description' => 'Aluno no sistema',
+            'name' => 'Endereco',
+            'description' => 'Endereço de uma entidade no sistema',
             'fields' => function() {
                 return [
                     'id' => Types::id(),
-                    'nome' => [
+                    'logradouro' => [
                         'type' => Types::string(),
                     ],
-                    'email' => [
+                    'bairro' => [
                         'type' => Types::string(),
                     ],
-                    'endereco' => Types::endereco()
                 ];
             },
             'interfaces' => [
                 Types::node()
             ],
-            'resolveField' => function(Aluno $aluno, $args, $context, ResolveInfo $info) {
+            'resolveField' => function(Endereco $aluno, $args, $context, ResolveInfo $info) {
                 $method = 'resolve' . ucfirst($info->fieldName);
                 if (method_exists($this, $method)) {
                     return $this->{$method}($aluno, $args, $context, $info);
@@ -39,14 +38,8 @@ class AlunoType extends ObjectType
                 }
             }
         ];
-
         parent::__construct($config);
     }
 
     // implementar métodos para os campos cujos nomes não existem no Model
-    public function resolveEndereco(Aluno $aluno, $args, $context, $ingo)
-    {
-        $endereco = $aluno->endereco;
-        return $endereco;
-    }
 }
