@@ -1,13 +1,12 @@
 <?php
 
-namespace Controllers;
+namespace Foco\Controller;
 
 use Illuminate\Pagination\Paginator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use Models\Aluno;
-use Models\Endereco;
+use Model\Aluno;
 
 class AlunosController extends Controller
 {

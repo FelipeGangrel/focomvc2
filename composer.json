@@ -31,13 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Types\\": "src/Types",
-            "Queries\\": "src/Queries",
-            "Models\\": "src/Models",
-            "Mutations\\": "src/Mutations",
-            "Repositories\\": "src/Repositories",
-            "Controllers\\": "src/Controllers",
-            "Resolvers\\": "src/Resolvers"
+            "Foco\\": "src/"
         }
     },
     "autoload-dev": {

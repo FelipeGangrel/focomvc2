@@ -1,6 +1,6 @@
 <?php
 
-namespace Models;
+namespace Foco\Model;
 
 use Illuminate\Database\Eloquent\Model;
 

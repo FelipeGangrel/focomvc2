@@ -12,11 +12,11 @@ return function (App $app) {
     };
 
     // baseRoute
-    $container['baseRoute'] = function($c) {
+    $container['baseRoute'] = function ($c) {
         return $c->get('settings')['baseRoute'];
     };
 
-    // database
+    // database com eloquent
     $container['database'] = function ($c) {
         $settings = $c->get('settings')['db'];
         $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -35,8 +35,23 @@ return function (App $app) {
         return $logger;
     };
 
-    // Controllers
-    $container['AlunosController'] = function($c) {
-        return new Controllers\AlunosController($c);
+    /**
+     * Controllers
+     * Todos os controllers não registrados aqui 
+     * receberão por padrão apenas um objeto do tipo \Slim\Container
+     */
+    $container['AlunosController'] = function ($c) {
+        return new Foco\Controller\AlunosController($c);
+    };
+
+    $container['GraphQLController'] = function ($c) {
+
+        $settings = $c->get('settings')['graphql'];
+
+        $maxDepth = $settings['maxDepth'];
+        $introspection = $settings['introspection'];
+        $debug = $settings['debug'];
+
+        return new Foco\Controller\GraphQLController($c, $maxDepth, $introspection, $debug);
     };
 };
