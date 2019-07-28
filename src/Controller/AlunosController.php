@@ -25,6 +25,14 @@ class AlunosController extends Controller
         return $response->withJson($data);
     }
 
+    public function view(Request $request, Response $response, array $args)
+    {
+        $id = $args['id'];
+        $data = Aluno::with('endereco')->find($id);
+
+        return $response->withJson($data);
+    }
+
     public function create(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();

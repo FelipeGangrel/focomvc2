@@ -19,6 +19,7 @@ return function (App $app) {
         $app->group('/rest', function () use ($app) {
             $app->group('/alunos', function () use ($app) {
                 $app->get('', AlunosController::class . ":index");
+                $app->get('/{id}', AlunosController::class . ":view");
                 $app->post('', AlunosController::class . ":create");
                 $app->put('/{id}', AlunosController::class . ":update");
             });
