@@ -20,7 +20,10 @@
     "require": {
         "php": ">=7.2",
         "illuminate/database": "^5.8",
+        "illuminate/filesystem": "^5.8",
         "illuminate/pagination": "^5.8",
+        "illuminate/translation": "^5.8",
+        "illuminate/validation": "^5.8",
         "monolog/monolog": "^1.17",
         "slim/php-view": "^2.0",
         "slim/slim": "^3.1",

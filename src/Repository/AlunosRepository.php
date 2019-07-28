@@ -3,6 +3,7 @@
 namespace Foco\Repository;
 
 use Foco\Model\Aluno;
+use Foco\Validator\AlunoValidator;
 
 class AlunosRepository extends BaseRepository
 {
@@ -17,11 +18,21 @@ class AlunosRepository extends BaseRepository
 
     public function create($data)
     {
-        $aluno = $this->model->create($data);
-        if (isset($data['endereco'])) {
-            $aluno->endereco()->create($data['endereco']);
+        try {
+
+            $validator = new AlunoValidator;
+            $validator->beforeCreate($data)->validate();
+
+            $aluno = $this->model->create($data);
+            if (isset($data['endereco'])) {
+                $aluno->endereco()->create($data['endereco']);
+            }
+            return $this->find($aluno->id);
+        } catch (\Foco\Validator\ValidatorException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw $e;
         }
-        return $this->find($aluno->id);
     }
 
     public function update($id, $data)

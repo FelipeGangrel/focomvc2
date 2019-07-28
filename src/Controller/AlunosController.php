@@ -35,9 +35,15 @@ class AlunosController extends BaseController
 
     public function create(Request $request, Response $response, array $args)
     {
-        $body = $request->getParsedBody();
-        $data = $this->alunosRepo->create($body);
-        return $response->withJson($data);
+        try {
+            $body = $request->getParsedBody();
+            $data = $this->alunosRepo->create($body);
+            return $this->successResponse($response, $data);
+        } catch (\Foco\Validator\ValidatorException $e) {
+            return $this->errorResponse($response, $e->getErrors(), $e->getMessage());
+        } catch (\Exception $e) {
+            return $this->errorResponse($response, null, $e->getMessage());
+        }
     }
 
     public function update(Request $request, Response $response, array $args)

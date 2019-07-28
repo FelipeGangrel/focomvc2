@@ -17,13 +17,25 @@ class BaseController
         $this->database = $container->database;
     }
 
-    public function successResponse(Response $response, $data)
+    public function successResponse(Response $response, $data = null, $message = "Requisição realizada com sucesso")
     {
-        $return = [
+        return $response->withJson([
+            'success' => true,
             'data' => isset($data['data']) ? $data['data'] : $data,
             'paginator' => isset($data['paginator']) ? $data['paginator'] : null,
-            'success' => true,
-        ];
-        return $response->withJson($return);
+            'message' => $message,
+            'errors' => null
+        ]);
+    }
+
+    public function errorResponse(Response $response, $errors, $message = "Requisição resultou em falha")
+    {
+        return $response->withJson([
+            'success' => false,
+            'data' => null,
+            'paginator' => null,
+            'message' => $message,
+            'errors' => $errors
+        ]);
     }
 }
