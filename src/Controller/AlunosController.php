@@ -28,9 +28,13 @@ class AlunosController extends BaseController
 
     public function view(Request $request, Response $response, array $args)
     {
-        $id = $args['id'];
-        $data = $this->alunosRepo->find($id);
-        return $this->successResponse($response, $data);
+        try {
+            $id = $args['id'];
+            $data = $this->alunosRepo->find($id);
+            return $this->successResponse($response, $data);
+        } catch (\Exception $e) {
+            return $this->errorResponse($response, null, $e->getMessage());
+        }
     }
 
     public function create(Request $request, Response $response, array $args)
@@ -54,11 +58,10 @@ class AlunosController extends BaseController
         try {
             $data = $this->alunosRepo->update($id, $body);
             return $response->withJson($data);
+        } catch (\Foco\Validator\ValidatorException $e) {
+            return $this->errorResponse($response, $e->getErrors(), $e->getMessage());
         } catch (\Exception $e) {
-            return $response->withJson([
-                'success' => false,
-                'error' => $e->getMessage(),
-            ]);        
-        } 
+            return $this->errorResponse($response, null, $e->getMessage());
+        }
     }
 }

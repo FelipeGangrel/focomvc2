@@ -33,6 +33,14 @@ class BaseRepository
 
     public function find($id)
     {
-        return $this->model->with($this->defaultRelations)->findOrFail($id);
+        try {
+            return $this->model->with($this->defaultRelations)->findOrFail($id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Caso o registro não exista
+            throw new \Exception("Não foi possível encontrar o registro de id {$id}");
+        } catch (\Exception $e) {
+            // Caso seja outro tipo de exceção
+            throw $e;
+        }
     }
 }
