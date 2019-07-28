@@ -5,7 +5,6 @@ namespace Foco\GraphQL\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use Foco\Model\Aluno;
 use Foco\GraphQL\Types;
 
 class AlunoType extends ObjectType
@@ -30,12 +29,12 @@ class AlunoType extends ObjectType
             'interfaces' => [
                 Types::node()
             ],
-            'resolveField' => function(Aluno $aluno, $args, $context, ResolveInfo $info) {
+            'resolveField' => function($model, $args, $context, ResolveInfo $info) {
                 $method = 'resolve' . ucfirst($info->fieldName);
                 if (method_exists($this, $method)) {
-                    return $this->{$method}($aluno, $args, $context, $info);
+                    return $this->{$method}($model, $args, $context, $info);
                 } else {
-                    return $aluno->{$info->fieldName};
+                    return $model->{$info->fieldName};
                 }
             }
         ];
@@ -44,9 +43,10 @@ class AlunoType extends ObjectType
     }
 
     // implementar métodos para os campos cujos nomes não existem no Model
-    public function resolveEndereco(Aluno $aluno, $args, $context, $ingo)
+    // Este método não é necessário neste type, mas vou deixar como referência
+    public function resolveEndereco($model, $args, $context, $ingo)
     {
-        $endereco = $aluno->endereco;
+        $endereco = $model->endereco;
         return $endereco;
     }
 }

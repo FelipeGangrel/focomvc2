@@ -10,6 +10,7 @@ use Foco\GraphQL\Type\AlunoType;
 use Foco\GraphQL\Type\QueryType;
 use Foco\GraphQL\Type\NodeType;
 use Foco\GraphQL\Type\EnderecoType;
+use Foco\GraphQL\Type\CidadeType;
 
 /**
  * Funcionará como registro e factory para
@@ -28,6 +29,12 @@ class Types
     public static function endereco()
     {
         return self::$endereco ?: (self::$endereco = new EnderecoType());
+    }
+
+    private static $cidade;
+    public static function cidade()
+    {
+        return self::$cidade ?: (self::$cidade = new CidadeType());
     }
 
     private static $query;

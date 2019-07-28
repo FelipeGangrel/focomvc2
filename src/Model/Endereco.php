@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Endereco extends Model
 {
     protected $table = "enderecos";
-    protected $fillable = ['logradouro', 'bairro', 'cidade'];
+    protected $fillable = ['logradouro', 'bairro', 'cidade_id'];
+    protected $hidden = ['enderecoable_type', 'enderecoable_id'];
 
     public function enderecoable()
     {
-        $this->morphTo();
+        return $this->morphTo();
+    }
+
+    public function cidade()
+    {
+        return $this->belongsTo(Cidade::class);
     }
 }

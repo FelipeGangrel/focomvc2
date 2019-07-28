@@ -7,9 +7,7 @@ use Foco\Validator\AlunoValidator;
 
 class AlunosRepository extends BaseRepository
 {
-    protected $defaultRelations = [
-        'endereco'
-    ];
+    protected $defaultRelations = ['endereco','endereco.cidade'];
 
     public function __construct()
     {

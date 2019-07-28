@@ -18,9 +18,9 @@ class AlunoValidator
         $validator = $this->factory->make($data, $rules = [
             'nome' => 'required|max:255',
             'email' => 'required|email|max:255',
-            'endereco.logradouro' => 'required_with:endereco.bairro,endereco.cidade',
-            'endereco.bairro' => 'required_with:endereco.logradouro,endereco.cidade',
-            'endereco.cidade' => 'required_with:endereco.logradouro,endereco.bairro',
+            'endereco.logradouro' => 'required_with:endereco.bairro,endereco.cidade_id',
+            'endereco.bairro' => 'required_with:endereco.logradouro,endereco.cidade_id',
+            'endereco.cidade_id' => 'required_with:endereco.logradouro,endereco.bairro',
         ], $messages = [
             'nome.required' => 'O campo nome é obrigatório!!!', // podemos adicionar mensagens customizadas também
             'nome.max' => 'O campo nome tem um comprimento superior a 255',
