@@ -19,11 +19,16 @@ class AlunoType extends ObjectType
                     'id' => Types::id(),
                     'nome' => [
                         'type' => Types::string(),
+                        'description' => 'Nome completo do Aluno',
                     ],
                     'email' => [
                         'type' => Types::string(),
+                        'description' => 'E-mail no Aluno'
                     ],
-                    'endereco' => Types::endereco()
+                    'endereco' => [
+                        'type' => Types::endereco(),
+                        'description' => 'Endereço do Aluno'
+                    ]
                 ];
             },
             'interfaces' => [

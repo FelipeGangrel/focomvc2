@@ -40,7 +40,7 @@ class QueryType extends ObjectType
                             'description' => 'Quantidade de items a serem colocados na coleção',
                         ],
                         'page' => [
-                            'type' => Types::id(),
+                            'type' => Types::int(),
                             'description' => 'Número da página a ser entregue'
                         ]
                     ]
@@ -61,7 +61,7 @@ class QueryType extends ObjectType
                             'description' => 'Quantidade de items a serem colocados na coleção',
                         ],
                         'page' => [
-                            'type' => Types::id(),
+                            'type' => Types::int(),
                             'description' => 'Número da página a ser entregue'
                         ]
                     ]
